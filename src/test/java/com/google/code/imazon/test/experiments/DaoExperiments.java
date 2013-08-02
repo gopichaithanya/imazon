@@ -2,7 +2,7 @@ package com.google.code.imazon.test.experiments;
 
 import org.hibernate.Transaction;
 
-import com.google.code.imazon.model.userprofile.UserProfile;
+import com.google.code.imazon.model.userprofile.User;
 import com.google.code.imazon.model.userprofile.UserProfileDao;
 import com.google.code.imazon.model.userprofile.UserProfileDaoHibernate;
 import com.google.code.imazon.model.userservice.util.PasswordEncrypter;
@@ -22,7 +22,7 @@ public class DaoExperiments {
 		try {
 
 			// Register user.
-			UserProfile userProfile = new UserProfile("daoUser",
+			User userProfile = new User("daoUser",
 					PasswordEncrypter.crypt("userPassword"), "name",
 					"lastName", "user@udc.es");
 			userProfileDao.save(userProfile);

@@ -1,28 +1,27 @@
 package com.google.code.imazon.model.userservice;
 
-import com.google.code.imazon.model.userprofile.UserProfile;
+import com.google.code.imazon.model.user.User;
 import es.udc.pojo.modelutil.exceptions.DuplicateInstanceException;
 import es.udc.pojo.modelutil.exceptions.InstanceNotFoundException;
 
 public interface UserService {
 
-    public UserProfile registerUser(String loginName, String clearPassword,
-            UserProfileDetails userProfileDetails)
+    public User registerUser(String login, String password,
+            UserDetails userDetails)
             throws DuplicateInstanceException;
 
-    public UserProfile login(String loginName, String password,
-            boolean passwordIsEncrypted) throws InstanceNotFoundException,
+    public User login(String login, String password,
+            boolean isPasswordEncrypted) throws InstanceNotFoundException,
             IncorrectPasswordException;
 
-    public UserProfile findUserProfile(Long userProfileId)
+    public User findUser(Long userId)
             throws InstanceNotFoundException;
 
-    public void updateUserProfileDetails(Long userProfileId,
-            UserProfileDetails userProfileDetails)
+    public void updateUserDetails(Long userId,
+            UserDetails userDetails)
             throws InstanceNotFoundException;
 
-    public void changePassword(Long userProfileId, String oldClearPassword,
-            String newClearPassword) throws IncorrectPasswordException,
+    public void changePassword(Long userId, String oldPassword,
+            String newPassword) throws IncorrectPasswordException,
             InstanceNotFoundException;
-
 }

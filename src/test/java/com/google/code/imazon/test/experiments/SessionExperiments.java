@@ -3,7 +3,7 @@ package com.google.code.imazon.test.experiments;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.google.code.imazon.model.userprofile.UserProfile;
+import com.google.code.imazon.model.userprofile.User;
 import com.google.code.imazon.model.userservice.util.PasswordEncrypter;
 
 public class SessionExperiments {
@@ -16,7 +16,7 @@ public class SessionExperiments {
 			tx = session.beginTransaction();
 
 			// Register user.
-			UserProfile userProfile = new UserProfile("sessionUser",
+			User userProfile = new User("sessionUser",
 					PasswordEncrypter.crypt("userPassword"), "name",
 					"lastName", "user@udc.es");
 			session.saveOrUpdate(userProfile);
@@ -26,7 +26,7 @@ public class SessionExperiments {
 			System.out.println(userProfile);
 
 			// Find user.
-			userProfile = (UserProfile) session.get(UserProfile.class, userId);
+			userProfile = (User) session.get(User.class, userId);
 			if (userProfile != null) {
 				System.out.println("User with userId '" + userId
 						+ "' has been retrieved");

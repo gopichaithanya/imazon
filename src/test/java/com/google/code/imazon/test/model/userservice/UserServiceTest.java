@@ -11,9 +11,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.code.imazon.model.userprofile.UserProfile;
+import com.google.code.imazon.model.userprofile.User;
 import com.google.code.imazon.model.userservice.IncorrectPasswordException;
-import com.google.code.imazon.model.userservice.UserProfileDetails;
+import com.google.code.imazon.model.userservice.UserDetails;
 import com.google.code.imazon.model.userservice.UserService;
 import es.udc.pojo.modelutil.exceptions.DuplicateInstanceException;
 import es.udc.pojo.modelutil.exceptions.InstanceNotFoundException;
@@ -33,11 +33,11 @@ public class UserServiceTest {
         throws DuplicateInstanceException, InstanceNotFoundException {
 
         /* Register user and find profile. */
-        UserProfile userProfile = userService.registerUser(
+        User userProfile = userService.registerUser(
             "user", "userPassword",
-            new UserProfileDetails("name", "lastName", "user@udc.es"));
+            new UserDetails("name", "lastName", "user@udc.es"));
 
-        UserProfile userProfile2 = userService.findUserProfile(
+        User userProfile2 = userService.findUserProfile(
             userProfile.getUserProfileId());
 
         /* Check data. */
@@ -51,7 +51,7 @@ public class UserServiceTest {
 
         String loginName = "user";
         String clearPassword = "userPassword";
-        UserProfileDetails userProfileDetails = new UserProfileDetails(
+        UserDetails userProfileDetails = new UserDetails(
             "name", "lastName", "user@udc.es");
 
         userService.registerUser(loginName, clearPassword,
@@ -67,9 +67,9 @@ public class UserServiceTest {
         InstanceNotFoundException {
 
         String clearPassword = "userPassword";
-        UserProfile userProfile = registerUser("user", clearPassword);
+        User userProfile = registerUser("user", clearPassword);
 
-        UserProfile userProfile2 = userService.login(userProfile.getLoginName(),
+        User userProfile2 = userService.login(userProfile.getLoginName(),
             clearPassword, false);
 
         assertEquals(userProfile, userProfile2);
@@ -81,9 +81,9 @@ public class UserServiceTest {
     public void testLoginEncryptedPassword() throws IncorrectPasswordException,
             InstanceNotFoundException {
 
-        UserProfile userProfile = registerUser("user", "clearPassword");
+        User userProfile = registerUser("user", "clearPassword");
 
-        UserProfile userProfile2 = userService.login(userProfile.getLoginName(),
+        User userProfile2 = userService.login(userProfile.getLoginName(),
             userProfile.getEncryptedPassword(), true);
 
         assertEquals(userProfile, userProfile2);
@@ -95,7 +95,7 @@ public class UserServiceTest {
             InstanceNotFoundException {
 
         String clearPassword = "userPassword";
-        UserProfile userProfile = registerUser("user", clearPassword);
+        User userProfile = registerUser("user", clearPassword);
 
         userService.login(userProfile.getLoginName(), 'X' + clearPassword,
              false);
@@ -123,9 +123,9 @@ public class UserServiceTest {
 
         /* Update profile. */
         String clearPassword = "userPassword";
-        UserProfile userProfile = registerUser("user", clearPassword);
+        User userProfile = registerUser("user", clearPassword);
 
-        UserProfileDetails newUserProfileDetails = new UserProfileDetails(
+        UserDetails newUserProfileDetails = new UserDetails(
             'X' + userProfile.getFirstName(), 'X' + userProfile.getLastName(),
             'X' + userProfile.getEmail());
 
@@ -134,7 +134,7 @@ public class UserServiceTest {
 
         /* Check changes. */
         userService.login(userProfile.getLoginName(), clearPassword, false);
-        UserProfile userProfile2 = userService.findUserProfile(
+        User userProfile2 = userService.findUserProfile(
             userProfile.getUserProfileId());
 
         assertEquals(newUserProfileDetails.getFirstName(),
@@ -151,7 +151,7 @@ public class UserServiceTest {
             throws InstanceNotFoundException {
 
         userService.updateUserProfileDetails(NON_EXISTENT_USER_PROFILE_ID,
-            new UserProfileDetails("name", "lastName", "user@udc.es"));
+            new UserDetails("name", "lastName", "user@udc.es"));
 
     }
 
@@ -161,7 +161,7 @@ public class UserServiceTest {
 
         /* Change password. */
         String clearPassword = "userPassword";
-        UserProfile userProfile = registerUser("user", clearPassword);
+        User userProfile = registerUser("user", clearPassword);
         String newClearPassword = 'X' + clearPassword;
 
         userService.changePassword(userProfile.getUserProfileId(),
@@ -177,7 +177,7 @@ public class UserServiceTest {
             throws InstanceNotFoundException, IncorrectPasswordException {
 
         String clearPassword = "userPassword";
-        UserProfile userProfile = registerUser("user", clearPassword);
+        User userProfile = registerUser("user", clearPassword);
 
         userService.changePassword(userProfile.getUserProfileId(),
             'X' + clearPassword, 'Y' + clearPassword);
@@ -193,9 +193,9 @@ public class UserServiceTest {
 
     }
 
-    private UserProfile registerUser(String loginName, String clearPassword) {
+    private User registerUser(String loginName, String clearPassword) {
 
-        UserProfileDetails userProfileDetails = new UserProfileDetails(
+        UserDetails userProfileDetails = new UserDetails(
             "name", "lastName", "user@udc.es");
 
         try {

@@ -9,8 +9,8 @@ import org.apache.tapestry5.corelib.components.TextField;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 
-import com.google.code.imazon.model.userprofile.UserProfile;
-import com.google.code.imazon.model.userservice.UserProfileDetails;
+import com.google.code.imazon.model.userprofile.User;
+import com.google.code.imazon.model.userservice.UserDetails;
 import com.google.code.imazon.model.userservice.UserService;
 import com.google.code.imazon.web.pages.Index;
 import com.google.code.imazon.web.services.AuthenticationPolicy;
@@ -71,8 +71,8 @@ public class Register {
         } else {
 
             try {
-                UserProfile userProfile = userService.registerUser(loginName, password,
-                    new UserProfileDetails(firstName, lastName, email));
+                User userProfile = userService.registerUser(loginName, password,
+                    new UserDetails(firstName, lastName, email));
                 userProfileId = userProfile.getUserProfileId();
             } catch (DuplicateInstanceException e) {
                 registrationForm.recordError(loginNameField, messages
