@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
             UserDetails userDetails)
             throws DuplicateInstanceException {
         try {
-            userDao.findByLogin(login);
+            userDao.findUserByLogin(login);
             throw new DuplicateInstanceException(login,
                     User.class.getName());
         } catch (InstanceNotFoundException e) {
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     public User login(String login, String password,
             boolean isPasswordEncrypted) throws InstanceNotFoundException,
             IncorrectPasswordException {
-        User user = userDao.findByLogin(login);
+        User user = userDao.findUserByLogin(login);
         String storedPassword = user.getPassword();
         if (isPasswordEncrypted) {
             if (!password.equals(storedPassword)) {

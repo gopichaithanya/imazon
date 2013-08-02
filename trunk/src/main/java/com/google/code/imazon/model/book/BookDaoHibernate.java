@@ -34,7 +34,7 @@ public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Book> findByCategoryAndKeys(Short categoryId, String keys,
+	public List<Book> findBooksByCategoryAndKeys(Short categoryId, String keys,
 			int start, int count) throws InstanceNotFoundException {
 		Query q = getSession().createQuery(
 				"SELECT b FROM Book b WHERE " + getHQLWhereCondition(categoryId, keys));
@@ -95,7 +95,7 @@ public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Book> findByPublisherId(Long publisherId, int start, int count)
+	public List<Book> findBooksByPublisherId(Long publisherId, int start, int count)
 			throws InstanceNotFoundException {
 		List<Book> books = (List<Book>) getSession().createQuery(
 				"SELECT b FROM Book b WHERE b.publisher.userId = :publisherId "
