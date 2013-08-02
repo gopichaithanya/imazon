@@ -6,9 +6,9 @@ import static com.google.code.imazon.test.util.GlobalNames.SPRING_CONFIG_TEST_FI
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.google.code.imazon.model.userprofile.UserProfile;
+import com.google.code.imazon.model.userprofile.User;
 import com.google.code.imazon.model.userservice.IncorrectPasswordException;
-import com.google.code.imazon.model.userservice.UserProfileDetails;
+import com.google.code.imazon.model.userservice.UserDetails;
 import com.google.code.imazon.model.userservice.UserService;
 import es.udc.pojo.modelutil.exceptions.DuplicateInstanceException;
 import es.udc.pojo.modelutil.exceptions.InstanceNotFoundException;
@@ -24,8 +24,8 @@ public class UserServiceExperiments {
 
 		try {
 			// Register user.
-			UserProfile userProfile = userService.registerUser("serviceUser",
-					"userPassword", new UserProfileDetails("name", "lastName",
+			User userProfile = userService.registerUser("serviceUser",
+					"userPassword", new UserDetails("name", "lastName",
 							"user@udc.es"));
 			System.out.println("User with userId '"
 					+ userProfile.getUserProfileId() + "' has been created");

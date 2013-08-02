@@ -4,8 +4,8 @@ import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
 
-import com.google.code.imazon.model.userprofile.UserProfile;
-import com.google.code.imazon.model.userservice.UserProfileDetails;
+import com.google.code.imazon.model.userprofile.User;
+import com.google.code.imazon.model.userservice.UserDetails;
 import com.google.code.imazon.model.userservice.UserService;
 import com.google.code.imazon.web.pages.Index;
 import com.google.code.imazon.web.services.AuthenticationPolicy;
@@ -33,7 +33,7 @@ public class UpdateProfile {
 
     void onPrepareForRender() throws InstanceNotFoundException {
 
-        UserProfile userProfile;
+        User userProfile;
 
         userProfile = userService.findUserProfile(userSession
                 .getUserProfileId());
@@ -46,7 +46,7 @@ public class UpdateProfile {
     Object onSuccess() throws InstanceNotFoundException {
 
         userService.updateUserProfileDetails(
-                userSession.getUserProfileId(), new UserProfileDetails(
+                userSession.getUserProfileId(), new UserDetails(
                         firstName, lastName, email));
         userSession.setFirstName(firstName);
         return Index.class;

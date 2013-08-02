@@ -8,7 +8,7 @@ import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Cookies;
 
-import com.google.code.imazon.model.userprofile.UserProfile;
+import com.google.code.imazon.model.userprofile.User;
 import com.google.code.imazon.model.userservice.IncorrectPasswordException;
 import com.google.code.imazon.model.userservice.UserService;
 import com.google.code.imazon.web.pages.Index;
@@ -45,7 +45,7 @@ public class Login {
     @Inject
     private UserService userService;
 
-    private UserProfile userProfile = null;
+    private User userProfile = null;
 
 
     void onValidateFromLoginForm() {
