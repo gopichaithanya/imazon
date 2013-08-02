@@ -7,7 +7,7 @@ import es.udc.pojo.modelutil.exceptions.InstanceNotFoundException;
 
 public interface BookDao extends GenericDao<Book, Long> {
 
-	public List<Book> findByCategoryAndKeys(Short categoryId, String keys,
+	public List<Book> findBooksByCategoryAndKeys(Short categoryId, String keys,
 			int start, int count) throws InstanceNotFoundException;
 	
 	public int getNumberOfBooksByCategoryAndKeys(Short categoryId, String keys);
@@ -17,7 +17,7 @@ public interface BookDao extends GenericDao<Book, Long> {
 	
 	public int getNumberOfBooks();
 
-	public List<Book> findByPublisherId(Long publisherId, int start, int count)
+	public List<Book> findBooksByPublisherId(Long publisherId, int start, int count)
 			throws InstanceNotFoundException;
 
 	public int getNumberOfBooksByPublisherId(Long publisherId);
