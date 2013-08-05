@@ -2,7 +2,7 @@ package com.google.code.imazon.model.category;
 
 import java.util.List;
 
-import es.udc.pojo.modelutil.dao.*;
+import es.udc.pojo.modelutil.dao.GenericDaoHibernate;
 import es.udc.pojo.modelutil.exceptions.InstanceNotFoundException;
 import org.springframework.stereotype.Repository;
 
@@ -14,21 +14,23 @@ public class CategoryDaoHibernate extends GenericDaoHibernate<Category, Short>
 	@SuppressWarnings("unchecked")
 	public List<Category> findAllCategories() throws InstanceNotFoundException{
 		List<Category> categories = (List<Category>)getSession().createQuery(
-				"SELECT c FROM Category c").list();
+				"SELECT c " +
+				"FROM Category c").list();
 		if (categories.isEmpty())
-			throw new InstanceNotFoundException(null, Category.class.getName());
+			throw new InstanceNotFoundException("categories",
+					Category.class.getName());
 		else return categories;
 	}
 	
 	@Override
-	public Category findCategoryByName(String name) throws InstanceNotFoundException {
+	public Category findCategoryByName(String name)
+			throws InstanceNotFoundException {
 		Category category = (Category) getSession().createQuery(
-		"SELECT c FROM Category c WHERE c.name = :name")
-		.setParameter("name", name)
-		.uniqueResult();
-		
+		"SELECT c " +
+		"FROM Category c " +
+		"WHERE c.name = :name").setParameter("name", name).uniqueResult();
 		if (category == null)
-			throw new InstanceNotFoundException(null, Category.class.getName());
+			throw new InstanceNotFoundException(name, Category.class.getName());
 		else
 			return category;
 	}
