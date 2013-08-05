@@ -3,7 +3,18 @@ package com.google.code.imazon.model.book;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import com.google.code.imazon.model.category.Category;
 import com.google.code.imazon.model.user.User;
@@ -16,7 +27,7 @@ public class Book {
 	private String author;
 	private Category category;
 	private User publisher;
-	private Calendar year;
+	private Calendar publicationDate;
 	private BigDecimal price;
 	private String language;
 	private String city;
@@ -28,14 +39,14 @@ public class Book {
 	}
 
 	public Book(String title, String author, Category category, User publisher,
-			Calendar year, BigDecimal price, String language, String city,
+			Calendar publicationDate, BigDecimal price, String language, String city,
 			String country, String isbn) {
 		super();
 		this.title = title;
 		this.author = author;
 		this.category = category;
 		this.publisher = publisher;
-		this.year = year;
+		this.publicationDate = publicationDate;
 		this.price = price;
 		this.language = language;
 		this.city = city;
@@ -92,12 +103,12 @@ public class Book {
 	}
 	
 	@Temporal(TemporalType.DATE)
-	public Calendar getYear() {
-		return year;
+	public Calendar getPublicationDate() {
+		return publicationDate;
 	}
 	
-	public void setYear(Calendar year) {
-		this.year = year;
+	public void setPublicationDate(Calendar publicationDate) {
+		this.publicationDate = publicationDate;
 	}
 	
 	public BigDecimal getPrice() {

@@ -2,7 +2,7 @@ package com.google.code.imazon.model.order.util;
 
 public enum OrderState {
 	SHOPPING_CART	('S'),
-	OUTSTANDING		('O'),
+	OUTSTANDING		('O'), // Pending of payment.
 	TBC				('T'), // To be confirmed.
 	CONFIRMED		('C'),
 	REJECTED		('R'),

@@ -2,7 +2,7 @@ package com.google.code.imazon.model.book;
 
 import java.util.List;
 
-import es.udc.pojo.modelutil.dao.*;
+import es.udc.pojo.modelutil.dao.GenericDaoHibernate;
 import es.udc.pojo.modelutil.exceptions.InstanceNotFoundException;
 
 import org.hibernate.Query;
@@ -37,7 +37,9 @@ public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 	public List<Book> findBooksByCategoryAndKeys(Short categoryId, String keys,
 			int start, int count) throws InstanceNotFoundException {
 		Query q = getSession().createQuery(
-				"SELECT b FROM Book b WHERE " + getHQLWhereCondition(categoryId, keys));
+				"SELECT b " +
+				"FROM Book b " +
+				"WHERE " + getHQLWhereCondition(categoryId, keys));
 		if (categoryId != null) {
 			q = q.setParameter("categoryId", categoryId);
 		}
@@ -48,7 +50,8 @@ public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 				q = q.setParameter("key" + i, "%" + aux[i] + "%");
 			}
 		}
-		List<Book> books = q.setFirstResult(start).setMaxResults(count).list();
+		List<Book> books = (List<Book>) 
+				q.setFirstResult(start).setMaxResults(count).list();
 		if (books.isEmpty()) {
 			throw new InstanceNotFoundException(categoryId + " " + keys,
 					Book.class.getName());
@@ -57,9 +60,12 @@ public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 	}
 	
 	@Override
-	public int getNumberOfBooksByCategoryAndKeys(Short categoryId, String keys) {
+	public Long getNumberOfBooksByCategoryAndKeys(Short categoryId,
+			String keys) {
 		Query q = getSession().createQuery(
-				"SELECT COUNT (b) FROM Book b WHERE " + getHQLWhereCondition(categoryId, keys));
+				"SELECT COUNT (b) " +
+				"FROM Book b " +
+				"WHERE " + getHQLWhereCondition(categoryId, keys));
 		if (categoryId != null) {
 			q = q.setParameter("categoryId", categoryId);
 		}
@@ -70,15 +76,17 @@ public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 				q = q.setParameter("key" + i, "%" + aux[i] + "%");
 			}
 		}
-		long n = (Long) q.uniqueResult();
-		return (int) n;
+		Long n = (Long) q.uniqueResult();
+		return n;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Book> findBooks(int start, int count) throws InstanceNotFoundException {
+	public List<Book> findBooks(int start, int count)
+			throws InstanceNotFoundException {
 		List<Book> books = (List<Book>) getSession().createQuery(
-				"SELECT b FROM Book b").setFirstResult(start)
+				"SELECT b " +
+				"FROM Book b").setFirstResult(start)
 				.setMaxResults(count).list();
 		if (books.isEmpty())
 			throw new InstanceNotFoundException("books", Book.class.getName());
@@ -87,33 +95,38 @@ public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 	}
 	
 	@Override
-	public int getNumberOfBooks() {
-		long n = ((Long) getSession().createQuery(
-				"SELECT COUNT(b) FROM Book b").uniqueResult());
-		return (int) n;
+	public Long getNumberOfBooks() {
+		Long n = ((Long) getSession().createQuery(
+				"SELECT COUNT(b) " +
+				"FROM Book b").uniqueResult());
+		return n;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Book> findBooksByPublisherId(Long publisherId, int start, int count)
-			throws InstanceNotFoundException {
+	public List<Book> findBooksByPublisherId(Long publisherId, int start,
+			int count) throws InstanceNotFoundException {
 		List<Book> books = (List<Book>) getSession().createQuery(
-				"SELECT b FROM Book b WHERE b.publisher.userId = :publisherId "
-					+ "ORDER BY b.year DESC")
+				"SELECT b FROM Book b " +
+				"WHERE b.publisher.userId = :publisherId " +
+				"ORDER BY b.year DESC")
 				.setParameter("publisherId", publisherId).setFirstResult(start)
 				.setMaxResults(count).list();
 		if (books.isEmpty()) {
-			throw new InstanceNotFoundException(publisherId, Book.class.getName());
+			throw new InstanceNotFoundException(publisherId,
+					Book.class.getName());
 		} else {
 			return books;
 		}
 	}
 	
 	@Override
-	public int getNumberOfBooksByPublisherId(Long publisherId) {
-		long n = ((Long) getSession().createQuery(
-				"SELECT COUNT(b) FROM Book b WHERE b.publisher.userId = :publisherId")
+	public Long getNumberOfBooksByPublisherId(Long publisherId) {
+		Long n = ((Long) getSession().createQuery(
+				"SELECT COUNT(b) " +
+				"FROM Book b " +
+				"WHERE b.publisher.userId = :publisherId")
 				.setParameter("publisherId", publisherId).uniqueResult());
-		return (int) n;
+		return n;
 	}
 }

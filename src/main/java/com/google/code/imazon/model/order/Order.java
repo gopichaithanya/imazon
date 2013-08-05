@@ -2,15 +2,28 @@ package com.google.code.imazon.model.order;
 
 import java.util.Calendar;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import com.google.code.imazon.model.order.util.OrderState;
 import com.google.code.imazon.model.user.User;
 
 @Entity
+@org.hibernate.annotations.BatchSize(size = 10)
 public class Order {
 	private long orderId;
-	private Calendar date;
+	private Calendar orderDate;
 	private User user;
 	private String name;
 	private String surname;
@@ -24,15 +37,14 @@ public class Order {
 	public Order() {
 	}
 
-	public Order(Calendar date, User user, String stateMessage) {
+	public Order(User user, Calendar orderDate) {
 		super();
-		this.date = date;
 		this.user = user;
+		this.orderDate = orderDate;
 		this.name = user.getName();
 		this.surname = user.getSurname();
 		this.address = user.getAddress();
 		this.state = OrderState.SHOPPING_CART;
-		this.stateMessage = stateMessage;
 	}
 
 	@SequenceGenerator(name = "OrderIdGenerator", sequenceName = "OrderSeg")
@@ -47,12 +59,12 @@ public class Order {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	public Calendar getDate() {
-		return date;
+	public Calendar getOrderDate() {
+		return orderDate;
 	}
 
-	public void setDate(Calendar date) {
-		this.date = date;
+	public void setOrderDate(Calendar orderDate) {
+		this.orderDate = orderDate;
 	}
 
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -97,6 +109,7 @@ public class Order {
 		this.address = address;
 	}
 
+	@Enumerated(EnumType.STRING)
 	public OrderState getState() {
 		return state;
 	}

@@ -1,13 +1,17 @@
 package com.google.code.imazon.model.category;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 @org.hibernate.annotations.Immutable
-@org.hibernate.annotations.BatchSize(size = 10)
 public class Category {
+	private Long categoryId;
 	private String name;
-	private Short categoryId;
 
 	public Category() {
 	};
@@ -20,11 +24,11 @@ public class Category {
 	@SequenceGenerator(name = "CategoryIdGenerator", sequenceName = "CategorySeg")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "CategoryIdGenerator")
-	public Short getCategoryId() {
+	public Long getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(short categoryId) {
+	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
 
