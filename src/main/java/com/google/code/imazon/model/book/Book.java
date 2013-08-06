@@ -3,7 +3,6 @@ package com.google.code.imazon.model.book;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,11 +15,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.BatchSize;
+
 import com.google.code.imazon.model.category.Category;
 import com.google.code.imazon.model.user.User;
 
 @Entity
-@org.hibernate.annotations.BatchSize(size = 10)
+@BatchSize(size = 10)
 public class Book {
 	private Long bookId;
 	private String title;
@@ -54,9 +55,8 @@ public class Book {
 		this.isbn = isbn;
 	}
 
-	@Column(name = "bookId")
-	@SequenceGenerator(name = "BookIdGenerator", sequenceName = "BookSeg")
 	@Id
+	@SequenceGenerator(name = "BookIdGenerator", sequenceName = "BookSeq")
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "BookIdGenerator")
 	public long getBookId() {
 		return bookId;
@@ -93,7 +93,7 @@ public class Book {
 	}
 	
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "userId")
+	@JoinColumn(name = "publisherId", referencedColumnName = "userId")
 	public User getPublisher() {
 		return publisher;
 	}
