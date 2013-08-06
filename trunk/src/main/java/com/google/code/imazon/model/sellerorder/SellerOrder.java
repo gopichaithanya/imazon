@@ -14,6 +14,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.BatchSize;
+
 import com.google.code.imazon.model.order.Order;
 import com.google.code.imazon.model.order.util.OrderState;
 import com.google.code.imazon.model.sellerorder.util.SellerOrderPK;
@@ -21,7 +23,7 @@ import com.google.code.imazon.model.user.User;
 
 @Entity
 @IdClass(SellerOrderPK.class)
-@org.hibernate.annotations.BatchSize(size = 10)
+@BatchSize(size = 10)
 public class SellerOrder {
 	private User seller;
 	private Order order;
@@ -32,7 +34,7 @@ public class SellerOrder {
 	
 	@Id
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
-	@JoinColumn(name = "userId")
+	@JoinColumn(name = "sellerId", referencedColumnName = "userId")
 	public User getSeller() {
 		return seller;
 	}

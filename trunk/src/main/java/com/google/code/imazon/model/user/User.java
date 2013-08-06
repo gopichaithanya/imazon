@@ -4,8 +4,10 @@ import java.util.Calendar;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.BatchSize;
+
 @Entity
-@org.hibernate.annotations.BatchSize(size = 10)
+@BatchSize(size = 10)
 public class User {
 	private Long userId;
 	private String name;
@@ -37,9 +39,8 @@ public class User {
 		this.address = address;
 	}
 	
-	@Column(name = "userId")
-	@SequenceGenerator(name = "UserIdGenerator", sequenceName = "UserSeg")
 	@Id
+	@SequenceGenerator(name = "UserIdGenerator", sequenceName = "UserSeq")
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "UserIdGenerator")
 	public Long getUserId() {
 		return userId;

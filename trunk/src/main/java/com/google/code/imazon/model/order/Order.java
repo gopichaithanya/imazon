@@ -16,18 +16,19 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.BatchSize;
+
 import com.google.code.imazon.model.order.util.OrderState;
 import com.google.code.imazon.model.user.User;
 
 @Entity
-@org.hibernate.annotations.BatchSize(size = 10)
+@BatchSize(size = 10)
 public class Order {
 	private long orderId;
 	private Calendar orderDate;
 	private User user;
 	private String name;
 	private String surname;
-	private String cardNumber;
 	private String address;
 	private OrderState state;
 	private String stateMessage;
@@ -47,8 +48,8 @@ public class Order {
 		this.state = OrderState.SHOPPING_CART;
 	}
 
-	@SequenceGenerator(name = "OrderIdGenerator", sequenceName = "OrderSeg")
 	@Id
+	@SequenceGenerator(name = "OrderIdGenerator", sequenceName = "OrderSeq")
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "OrderIdGenerator")
 	public long getOrderId() {
 		return orderId;
@@ -91,14 +92,6 @@ public class Order {
 
 	public void setSurname(String surname) {
 		this.surname = surname;
-	}
-
-	public String getCardNumber() {
-		return cardNumber;
-	}
-
-	public void setCardNumber(String cardNumber) {
-		this.cardNumber = cardNumber;
 	}
 
 	public String getAddress() {

@@ -10,13 +10,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.BatchSize;
+
 import com.google.code.imazon.model.book.Book;
 import com.google.code.imazon.model.order.Order;
 import com.google.code.imazon.model.orderbook.util.OrderBookPK;
 
 @Entity
 @IdClass(OrderBookPK.class)
-@org.hibernate.annotations.BatchSize(size = 10)
+@BatchSize(size = 10)
 public class OrderBook {
 	private Order order;
 	private Book book;
