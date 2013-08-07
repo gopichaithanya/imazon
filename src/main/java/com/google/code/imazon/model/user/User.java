@@ -6,10 +6,13 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.BatchSize;
 
+import com.google.code.imazon.model.user.util.UserProfile;
+
 @Entity
 @BatchSize(size = 10)
 public class User {
 	private Long userId;
+	private UserProfile profile;
 	private String name;
 	private String surname;
 	private String login;
@@ -48,6 +51,15 @@ public class User {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+	
+	@Enumerated(EnumType.STRING)
+	public UserProfile getProfile() {
+		return profile;
+	}
+
+	public void setProfile(UserProfile profile) {
+		this.profile = profile;
 	}
 
 	public String getName() {
