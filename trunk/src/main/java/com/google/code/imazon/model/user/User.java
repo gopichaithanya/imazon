@@ -31,6 +31,7 @@ public class User {
 			String email, Calendar birthDate, String phone, String mobile,
 			String address) {
 		super();
+		this.profile = UserProfile.BUYER;
 		this.name = name;
 		this.surname = surname;
 		this.login = login;

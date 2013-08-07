@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.code.imazon.model.user.User;
 import com.google.code.imazon.model.user.UserDao;
+import com.google.code.imazon.model.user.util.UserProfile;
 import com.google.code.imazon.model.userservice.util.PasswordEncrypter;
 import es.udc.pojo.modelutil.exceptions.DuplicateInstanceException;
 import es.udc.pojo.modelutil.exceptions.InstanceNotFoundException;
@@ -19,8 +20,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(String login, String password,
-            UserDetails userDetails)
-            throws DuplicateInstanceException {
+            UserDetails userDetails) throws DuplicateInstanceException {
         try {
             userDao.findUserByLogin(login);
             throw new DuplicateInstanceException(login,
@@ -43,6 +43,10 @@ public class UserServiceImpl implements UserService {
             boolean isPasswordEncrypted) throws InstanceNotFoundException,
             IncorrectPasswordException {
         User user = userDao.findUserByLogin(login);
+        UserProfile profile = user.getProfile();
+        if (profile == UserProfile.REMOVED) {
+        	throw new InstanceNotFoundException(login, User.class.getName());
+        }
         String storedPassword = user.getPassword();
         if (isPasswordEncrypted) {
             if (!password.equals(storedPassword)) {
@@ -59,14 +63,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User findUser(Long userId)
-            throws InstanceNotFoundException {
+    public User findUser(Long userId) throws InstanceNotFoundException {
         return userDao.find(userId);
     }
 
     @Override
-    public void updateUserDetails(Long userId,
-            UserDetails userDetails)
+    public void updateUserDetails(Long userId, UserDetails userDetails)
             throws InstanceNotFoundException {
         User user = userDao.find(userId);
         user.setName(userDetails.getName());
@@ -91,4 +93,17 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(PasswordEncrypter.crypt(newPassword));
     }
+
+	@Override
+	public void unregisterUser(Long userId, String password)
+			throws InstanceNotFoundException, IncorrectPasswordException {
+		User user = userDao.find(userId);
+		String storedPassword = user.getPassword();
+        if (!PasswordEncrypter.isClearPasswordCorrect(password,
+                storedPassword)) {
+            throw new IncorrectPasswordException(user.getLogin());
+        }
+		user.setProfile(UserProfile.REMOVED);
+		userDao.save(user);
+	}
 }
