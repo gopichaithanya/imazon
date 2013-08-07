@@ -12,10 +12,15 @@ public class UserDetails {
 	private String mobile;
 	private String address;
 
-	public UserDetails(String name, String surname, String email) {
+	public UserDetails(String name, String surname, String email,
+			Calendar birthDate, String phone, String mobile, String address) {
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
+		this.birthDate = birthDate;
+		this.phone = phone;
+		this.mobile = mobile;
+		this.address = address;
 	}
 
 	public String getName() {
