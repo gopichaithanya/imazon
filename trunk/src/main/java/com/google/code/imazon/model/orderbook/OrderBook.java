@@ -26,6 +26,16 @@ public class OrderBook {
 	private BigDecimal price;
 	private Long version;
 	
+	public OrderBook() {
+	}
+	
+	public OrderBook(Order order, Book book, Integer quantity) {
+		this.order = order;
+		this.book = book;
+		this.quantity = quantity;
+		this.price = book.getPrice();
+	}
+	
 	@Id
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "orderId")

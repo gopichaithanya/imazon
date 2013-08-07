@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 		implements BookDao {
 
-	private String getHQLWhereCondition(Short categoryId, String keys) {
+	private String getHQLWhereCondition(Long categoryId, String keys) {
 		String categoryHQL = "";
 		String keysHQL = "";
 		if (categoryId != null) {
@@ -34,7 +34,7 @@ public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Book> findBooksByCategoryAndKeys(Short categoryId, String keys,
+	public List<Book> findBooksByCategoryAndKeys(Long categoryId, String keys,
 			int start, int count) throws InstanceNotFoundException {
 		Query q = getSession().createQuery(
 				"SELECT b " +
@@ -60,7 +60,7 @@ public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 	}
 	
 	@Override
-	public Long getNumberOfBooksByCategoryAndKeys(Short categoryId,
+	public Long getNumberOfBooksByCategoryAndKeys(Long categoryId,
 			String keys) {
 		Query q = getSession().createQuery(
 				"SELECT COUNT (b) " +
