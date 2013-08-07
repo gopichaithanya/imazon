@@ -27,10 +27,19 @@ import com.google.code.imazon.model.user.User;
 public class SellerOrder {
 	private User seller;
 	private Order order;
-	private Calendar orderDate;
+	private Calendar modificationDate;
 	private OrderState state;
 	private String stateMessage;
 	private Long version;
+	
+	public SellerOrder() {
+	}
+	
+	public SellerOrder(User seller, Order order) {
+		this.seller = seller;
+		this.order = order;
+		this.modificationDate = Calendar.getInstance();
+	}
 	
 	@Id
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -55,12 +64,12 @@ public class SellerOrder {
 	}
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	public Calendar getOrderDate() {
-		return orderDate;
+	public Calendar getModificationDate() {
+		return modificationDate;
 	}
 	
-	public void setOrderDate(Calendar orderDate) {
-		this.orderDate = orderDate;
+	public void setModificationDate(Calendar modificationDate) {
+		this.modificationDate = modificationDate;
 	}
 	
 	@Enumerated(EnumType.STRING)

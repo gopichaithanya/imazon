@@ -38,10 +38,10 @@ public class Order {
 	public Order() {
 	}
 
-	public Order(User user, Calendar orderDate) {
+	public Order(User user) {
 		super();
 		this.user = user;
-		this.orderDate = orderDate;
+		this.orderDate = Calendar.getInstance();
 		this.name = user.getName();
 		this.surname = user.getSurname();
 		this.address = user.getAddress();
