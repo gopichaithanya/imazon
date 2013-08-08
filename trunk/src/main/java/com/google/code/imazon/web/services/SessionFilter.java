@@ -9,7 +9,7 @@ import org.apache.tapestry5.services.RequestFilter;
 import org.apache.tapestry5.services.RequestHandler;
 import org.apache.tapestry5.services.Response;
 
-import com.google.code.imazon.model.userprofile.User;
+import com.google.code.imazon.model.user.User;
 import com.google.code.imazon.model.userservice.IncorrectPasswordException;
 import com.google.code.imazon.model.userservice.UserService;
 import com.google.code.imazon.web.util.CookiesManager;
@@ -49,8 +49,8 @@ public class SessionFilter implements RequestFilter {
 								encryptedPassword, true);
 						UserSession userSession = new UserSession();
 						userSession.setUserProfileId(userProfile
-								.getUserProfileId());
-						userSession.setFirstName(userProfile.getFirstName());
+								.getUserId());
+						userSession.setFirstName(userProfile.getName());
 						applicationStateManager.set(UserSession.class,
 								userSession);
 
