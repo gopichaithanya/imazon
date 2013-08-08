@@ -12,6 +12,7 @@ import com.google.code.imazon.model.book.Book;
 import com.google.code.imazon.model.book.BookDao;
 import com.google.code.imazon.model.category.Category;
 import com.google.code.imazon.model.category.CategoryDao;
+import com.google.code.imazon.model.category.util.CategoryState;
 import com.google.code.imazon.model.order.Order;
 import com.google.code.imazon.model.order.OrderDao;
 import com.google.code.imazon.model.order.util.OrderState;
@@ -43,7 +44,7 @@ public class BuyerServiceImp implements BuyerService {
 	public List<Book> findBooks(Long categoryId, String key, int start,
 			int count) throws InstanceNotFoundException {
 		List<Book> books = bookDao.findBooksByCategoryAndKeys(categoryId,
-				key, start, count);
+				CategoryState.AVAILABLE, key, start, count);
 		if (books.isEmpty()) {
 			String msg = "books:";
 			if (categoryId != null)
@@ -59,14 +60,21 @@ public class BuyerServiceImp implements BuyerService {
 	@Transactional(readOnly = true)
 	public Long getNumberOfBooks(Long categoryId, String key)
 			throws InstanceNotFoundException {
-		return bookDao.getNumberOfBooksByCategoryAndKeys(categoryId, key);
+		return bookDao.getNumberOfBooksByCategoryAndKeys(categoryId,
+				CategoryState.AVAILABLE, key);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Book findBook(Long bookId) throws InstanceNotFoundException {
+		return bookDao.find(bookId);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<Category> findAllCategories()
 			throws InstanceNotFoundException {
-		return categoryDao.findAllCategories();
+		return categoryDao.findAllCategories(CategoryState.AVAILABLE);
 	}
 
 	@Override
@@ -75,11 +83,12 @@ public class BuyerServiceImp implements BuyerService {
 			throws InstanceNotFoundException {
 		return categoryDao.findCategoryByName(name);
 	}
-
+	
 	@Override
 	@Transactional(readOnly = true)
-	public Book findBook(Long bookId) throws InstanceNotFoundException {
-		return bookDao.find(bookId);
+	public Category findCategory(Long categoryId)
+			throws InstanceNotFoundException {
+		return categoryDao.find(categoryId);
 	}
 
 	@Override
@@ -92,7 +101,6 @@ public class BuyerServiceImp implements BuyerService {
 			User user = userDao.find(userId);
 			shoppingCart = new Order(user);
 			orderDao.save(shoppingCart);
-			shoppingCart = orderDao.findShoppingCart(userId);
 		}
 		return shoppingCart;
 	}
@@ -136,6 +144,28 @@ public class BuyerServiceImp implements BuyerService {
 		Book book = bookDao.find(bookId);
 		OrderBookPK orderBookPK = new OrderBookPK(shoppingCart, book);
 		orderBookDao.remove(orderBookPK);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Order> findOrdersByUserIdAndOrderState(Long userId,
+			OrderState state, int start, int count)
+					throws InstanceNotFoundException {
+		return orderDao.findOrdersByUserIdAndOrderState(userId,
+				state, start, count);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Long getNumberOfOrdersByUserIdAndOrderState(Long userId,
+			OrderState state) throws InstanceNotFoundException {
+		return orderDao.getNumberOfOrdersByUserIdAndOrderState(userId, state);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Order findOrder(Long orderId) throws InstanceNotFoundException {
+		return orderDao.find(orderId);
 	}
 
 	@Override

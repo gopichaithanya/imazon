@@ -33,7 +33,7 @@ public class SellerOrderDaoHibernate
 		Query query = getSession().createQuery(sql)
 				.setParameter("sellerId", sellerId);
 		if (state != null) {
-			query.setParameter("state", state);
+			query = query.setParameter("state", state);
 		}
 		List<Order> orders = (List<Order>) query.setFirstResult(start)
 				.setMaxResults(count).list();
@@ -57,7 +57,7 @@ public class SellerOrderDaoHibernate
 		Query query = getSession().createQuery(sql)
 				.setParameter("sellerId", sellerId);
 		if (state != null) {
-			query.setParameter("state", state);
+			query = query.setParameter("state", state);
 		}
 		Long n = (Long) query.uniqueResult(); 
 		return n;

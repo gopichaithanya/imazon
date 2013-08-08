@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +19,7 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.BatchSize;
 
+import com.google.code.imazon.model.book.util.BookState;
 import com.google.code.imazon.model.category.Category;
 import com.google.code.imazon.model.user.User;
 
@@ -24,6 +27,7 @@ import com.google.code.imazon.model.user.User;
 @BatchSize(size = 10)
 public class Book {
 	private Long bookId;
+	private BookState state;
 	private String title;
 	private String author;
 	private Category category;
@@ -43,6 +47,7 @@ public class Book {
 			Calendar publicationDate, BigDecimal price, String language, String city,
 			String country, String isbn) {
 		super();
+		this.state = BookState.AVAILABLE;
 		this.title = title;
 		this.author = author;
 		this.category = category;
@@ -58,7 +63,7 @@ public class Book {
 	@Id
 	@SequenceGenerator(name = "BookIdGenerator", sequenceName = "BookSeq")
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "BookIdGenerator")
-	public long getBookId() {
+	public Long getBookId() {
 		return bookId;
 	}
 
@@ -66,6 +71,15 @@ public class Book {
 		this.bookId = bookId;
 	}
 	
+	@Enumerated(EnumType.STRING)
+	public BookState getState() {
+		return state;
+	}
+
+	public void setState(BookState state) {
+		this.state = state;
+	}
+
 	public String getTitle() {
 		return title;
 	}
