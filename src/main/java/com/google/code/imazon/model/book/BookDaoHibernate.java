@@ -8,15 +8,29 @@ import es.udc.pojo.modelutil.exceptions.InstanceNotFoundException;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
+import com.google.code.imazon.model.category.util.CategoryState;
+
 @Repository("bookDao")
 public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 		implements BookDao {
+	
+	public Book findBookByIsbn(String isbn) throws InstanceNotFoundException {
+		Book book = ((Book) getSession().createQuery(
+				"SELECT b " +
+				"FROM Book b " +
+				"WHERE b.isbn = :isbn").uniqueResult());
+		return book;
+	}
 
-	private String getHQLWhereCondition(Long categoryId, String keys) {
+	private String getHQLWhereCondition(Long categoryId, CategoryState state,
+			String keys) {
 		String categoryHQL = "";
 		String keysHQL = "";
 		if (categoryId != null) {
 			categoryHQL += "b.category.categoryId = :categoryId";
+		}
+		if (state != null) {
+			categoryHQL += " AND c.state = :state";
 		}
 		if (keys != null) {
 			keys = keys.toLowerCase();
@@ -34,24 +48,28 @@ public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Book> findBooksByCategoryAndKeys(Long categoryId, String keys,
-			int start, int count) throws InstanceNotFoundException {
-		Query q = getSession().createQuery(
-				"SELECT b " +
+	public List<Book> findBooksByCategoryAndKeys(Long categoryId,
+			CategoryState state, String keys, int start, int count)
+					throws InstanceNotFoundException {
+		String sql = "SELECT b " +
 				"FROM Book b " +
-				"WHERE " + getHQLWhereCondition(categoryId, keys));
+				"WHERE " + getHQLWhereCondition(categoryId, state, keys);
+		Query query = getSession().createQuery(sql);
 		if (categoryId != null) {
-			q = q.setParameter("categoryId", categoryId);
+			query = query.setParameter("categoryId", categoryId);
+		}
+		if (state != null) {
+			query = query.setParameter("state", state);
 		}
 		if (keys != null) {
 			keys = keys.toLowerCase();
 			String[] aux = keys.split(" ");
 			for (int i = 0; i < aux.length; i++) {
-				q = q.setParameter("key" + i, "%" + aux[i] + "%");
+				query = query.setParameter("key" + i, "%" + aux[i] + "%");
 			}
 		}
 		List<Book> books = (List<Book>) 
-				q.setFirstResult(start).setMaxResults(count).list();
+				query.setFirstResult(start).setMaxResults(count).list();
 		if (books.isEmpty()) {
 			throw new InstanceNotFoundException(categoryId + " " + keys,
 					Book.class.getName());
@@ -61,22 +79,25 @@ public class BookDaoHibernate extends GenericDaoHibernate<Book, Long>
 	
 	@Override
 	public Long getNumberOfBooksByCategoryAndKeys(Long categoryId,
-			String keys) {
-		Query q = getSession().createQuery(
-				"SELECT COUNT (b) " +
+			CategoryState state, String keys) {
+		String sql = "SELECT COUNT (b) " +
 				"FROM Book b " +
-				"WHERE " + getHQLWhereCondition(categoryId, keys));
+				"WHERE " + getHQLWhereCondition(categoryId, state, keys); 
+		Query query = getSession().createQuery(sql);
 		if (categoryId != null) {
-			q = q.setParameter("categoryId", categoryId);
+			query = query.setParameter("categoryId", categoryId);
+		}
+		if (state != null) {
+			query = query.setParameter("state", state);
 		}
 		if (keys != null) {
 			keys = keys.toLowerCase();
 			String[] aux = keys.split(" ");
 			for (int i = 0; i < aux.length; i++) {
-				q = q.setParameter("key" + i, "%" + aux[i] + "%");
+				query = query.setParameter("key" + i, "%" + aux[i] + "%");
 			}
 		}
-		Long n = (Long) q.uniqueResult();
+		Long n = (Long) query.uniqueResult();
 		return n;
 	}
 

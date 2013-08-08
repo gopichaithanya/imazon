@@ -18,7 +18,10 @@ public class OrderDaoHibernate extends GenericDaoHibernate<Order, Long>
 	public List<Order> findOrdersByUserIdAndOrderState(Long userId,
 			OrderState state, int start, int count) 
 					throws InstanceNotFoundException {
-		String where = "WHERE o.user.userId = :userId ";
+		String where = "";
+		if (userId != null) {
+			where += "WHERE o.user.userId = :userId ";
+		}
 		if (state != null) {
 			where += "AND state = :state ";
 		}
@@ -26,10 +29,12 @@ public class OrderDaoHibernate extends GenericDaoHibernate<Order, Long>
 				"FROM Order o " +
 				 where +
 				"ORDER BY b.date DESC";
-		Query query = getSession().createQuery(sql)
-				.setParameter("userId", userId);
+		Query query = getSession().createQuery(sql);
+		if (userId != null) {
+			query = query.setParameter("userId", userId);
+		}
 		if (state != null) {
-			query.setParameter("state", state);
+			query = query.setParameter("state", state);
 		}
 		List<Order> orders = (List<Order>)
 				query.setFirstResult(start).setMaxResults(count).list();
@@ -43,17 +48,22 @@ public class OrderDaoHibernate extends GenericDaoHibernate<Order, Long>
 	@Override
 	public Long getNumberOfOrdersByUserIdAndOrderState(Long userId,
 			OrderState state) {
-		String where = "WHERE o.user.userId = :userId ";
+		String where = "";
+		if (userId != null) {
+			where += "WHERE o.user.userId = :userId ";
+		}
 		if (state != null) {
 			where += "AND state = :state ";
 		}
 		String sql = "SELECT COUNT(o) " +
 				"FROM Order o " +
 				where;
-		Query query = getSession().createQuery(sql)
-				.setParameter("userId", userId);
+		Query query = getSession().createQuery(sql);
+		if (userId != null) {
+			query = query.setParameter("userId", userId);
+		}
 		if (state != null) {
-			query.setParameter("state", state);
+			query = query.setParameter("state", state);
 		}
 		Long n = (Long) query.uniqueResult(); 
 		return n;
