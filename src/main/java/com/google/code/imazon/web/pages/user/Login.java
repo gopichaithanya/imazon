@@ -8,7 +8,7 @@ import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Cookies;
 
-import com.google.code.imazon.model.userprofile.User;
+import com.google.code.imazon.model.user.User;
 import com.google.code.imazon.model.userservice.IncorrectPasswordException;
 import com.google.code.imazon.model.userservice.UserService;
 import com.google.code.imazon.web.pages.Index;
@@ -22,7 +22,7 @@ import es.udc.pojo.modelutil.exceptions.InstanceNotFoundException;
 public class Login {
 
     @Property
-    private String loginName;
+    private String name;
 
     @Property
     private String password;
@@ -45,7 +45,7 @@ public class Login {
     @Inject
     private UserService userService;
 
-    private User userProfile = null;
+    private User user = null;
 
 
     void onValidateFromLoginForm() {
@@ -55,7 +55,7 @@ public class Login {
         }
 
         try {
-            userProfile = userService.login(loginName, password, false);
+            user = userService.login(name, password, false);
         } catch (InstanceNotFoundException e) {
             loginForm.recordError(messages.get("error-authenticationFailed"));
         } catch (IncorrectPasswordException e) {
@@ -67,12 +67,12 @@ public class Login {
     Object onSuccess() {
 
     	userSession = new UserSession();
-        userSession.setUserProfileId(userProfile.getUserProfileId());
-        userSession.setFirstName(userProfile.getFirstName());
+        userSession.setUserProfileId(user.getUserId());
+        userSession.setFirstName(user.getName());
 
         if (rememberMyPassword) {
-            CookiesManager.leaveCookies(cookies, loginName, userProfile
-                    .getEncryptedPassword());
+            CookiesManager.leaveCookies(cookies, name, user
+                    .getPassword());
         }
         return Index.class;
 

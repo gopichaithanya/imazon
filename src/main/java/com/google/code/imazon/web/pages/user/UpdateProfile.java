@@ -1,10 +1,12 @@
 package com.google.code.imazon.web.pages.user;
 
+import java.util.Calendar;
+
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
 
-import com.google.code.imazon.model.userprofile.User;
+import com.google.code.imazon.model.user.User;
 import com.google.code.imazon.model.userservice.UserDetails;
 import com.google.code.imazon.model.userservice.UserService;
 import com.google.code.imazon.web.pages.Index;
@@ -17,10 +19,10 @@ import es.udc.pojo.modelutil.exceptions.InstanceNotFoundException;
 public class UpdateProfile {
 
     @Property
-    private String firstName;
+    private String name;
 
     @Property
-    private String lastName;
+    private String surname;
 
     @Property
     private String email;
@@ -35,20 +37,22 @@ public class UpdateProfile {
 
         User userProfile;
 
-        userProfile = userService.findUserProfile(userSession
+        userProfile = userService.findUser(userSession
                 .getUserProfileId());
-        firstName = userProfile.getFirstName();
-        lastName = userProfile.getLastName();
+        name = userProfile.getName();
+        surname = userProfile.getSurname();
         email = userProfile.getEmail();
 
     }
 
     Object onSuccess() throws InstanceNotFoundException {
 
-        userService.updateUserProfileDetails(
+        userService.updateUserDetails(
+        		// TODO Update UserDetails to match all.
                 userSession.getUserProfileId(), new UserDetails(
-                        firstName, lastName, email));
-        userSession.setFirstName(firstName);
+                        name, surname, email, Calendar.getInstance(), "", "",
+                        ""));
+        userSession.setFirstName(name);
         return Index.class;
 
     }

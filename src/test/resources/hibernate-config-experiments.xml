@@ -25,6 +25,12 @@
         <property name="current_session_context_class">thread</property>
         
         <!--  List of persistent classes -->
-        <mapping class="com.google.code.imazon.model.userprofile.UserProfile" />
+        <!--  List of persistent classes -->
+		<mapping class="com.google.code.imazon.model.book.Book" />
+		<mapping class="com.google.code.imazon.model.category.Category" />
+		<mapping class="com.google.code.imazon.model.order.Order" />
+		<mapping class="com.google.code.imazon.model.orderbook.OrderBook" />
+		<mapping class="com.google.code.imazon.model.sellerorder.SellerOrder" />
+        <mapping class="com.google.code.imazon.model.user.User" />
     </session-factory>
 </hibernate-configuration>

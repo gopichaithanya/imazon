@@ -1,5 +1,7 @@
 package com.google.code.imazon.web.pages.user;
 
+import java.util.Calendar;
+
 import org.apache.tapestry5.annotations.Component;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
@@ -9,7 +11,7 @@ import org.apache.tapestry5.corelib.components.TextField;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 
-import com.google.code.imazon.model.userprofile.User;
+import com.google.code.imazon.model.user.User;
 import com.google.code.imazon.model.userservice.UserDetails;
 import com.google.code.imazon.model.userservice.UserService;
 import com.google.code.imazon.web.pages.Index;
@@ -22,7 +24,7 @@ import es.udc.pojo.modelutil.exceptions.DuplicateInstanceException;
 public class Register {
 
     @Property
-    private String loginName;
+    private String login;
 
     @Property
     private String password;
@@ -31,10 +33,10 @@ public class Register {
     private String retypePassword;
 
     @Property
-    private String firstName;
+    private String name;
 
     @Property
-    private String lastName;
+    private String surname;
 
     @Property
     private String email;
@@ -48,8 +50,8 @@ public class Register {
     @Component
     private Form registrationForm;
 
-    @Component(id = "loginName")
-    private TextField loginNameField;
+    @Component(id = "login")
+    private TextField loginField;
 
     @Component(id = "password")
     private PasswordField passwordField;
@@ -57,7 +59,7 @@ public class Register {
     @Inject
     private Messages messages;
 
-    private Long userProfileId;
+    private Long userId;
 
     void onValidateFromRegistrationForm() {
 
@@ -71,11 +73,13 @@ public class Register {
         } else {
 
             try {
-                User userProfile = userService.registerUser(loginName, password,
-                    new UserDetails(firstName, lastName, email));
-                userProfileId = userProfile.getUserProfileId();
+            	// TODO Update UserDetails to match all.
+                User userProfile = userService.registerUser(login, password,
+                    new UserDetails(name, surname, email,
+                    		Calendar.getInstance(), "", "", ""));
+                userId = userProfile.getUserId();
             } catch (DuplicateInstanceException e) {
-                registrationForm.recordError(loginNameField, messages
+                registrationForm.recordError(loginField, messages
                         .get("error-loginNameAlreadyExists"));
             }
 
@@ -86,8 +90,8 @@ public class Register {
     Object onSuccess() {
 
         userSession = new UserSession();
-        userSession.setUserProfileId(userProfileId);
-        userSession.setFirstName(firstName);
+        userSession.setUserProfileId(userId);
+        userSession.setFirstName(name);
         return Index.class;
 
     }
