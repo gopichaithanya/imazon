@@ -1,0 +1,1 @@
+Simple web application example to practice with J2EE technologies.
